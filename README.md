@@ -24,7 +24,8 @@ For Activity:
 	
         /** to show toast **/
         showToast("hello everyone")
-
+	
+	
         /** for checking fast click **/
         if (isNotFastClicks()) {
             // Work here if not fast clicks
@@ -48,25 +49,29 @@ For Activity:
         }, 3000)
 
 
-        /** Save Values in local storage **/
+        /** Save Values in sharedPreference storage **/
         saveString("myString", "rohit")
         saveInt("myInt", 1)
         saveBoolean("myBoolean", true)
         saveModel("myModel", Data("rohit", 1))
 
 
-        /** get Values from local storage **/
+        /** get Values from sharedPreference storage **/
         var saveStringValue = getString("myString")
         var saveIntValue = getInt("myInt")
         var saveBooleanValue = getBoolean("myBoolean")
         var saveModelValue = getModel("myModel", Data::class.java)
 
-        // clear all stored data when application kill
+
+        // clear all sharedPreference data 
         clearPreferenceData()
 	
 	
 For Fragments:
 
-         Use requireActivity() with function name.
-	 For e.g:  requireActivity.showProgress()
+        Use requireActivity() with function name to call the functions.
+	   
+	    For e.g:  
+	    requireActivity.showToast("hello everyone")
+	    requireActivity.showProgress()
 	
