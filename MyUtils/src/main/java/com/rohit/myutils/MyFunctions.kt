@@ -1,11 +1,18 @@
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.developers.imagezipper.ImageZipper
 import com.google.gson.Gson
 import com.rohit.myutils.R
+import java.io.File
 
 private var ON_CLICK_DELAY: Long = 700
 private var lastTimeClicked = 0L
@@ -39,6 +46,10 @@ fun Context.showProgess() {
         dialog!!.setContentView(R.layout.dialog_progress)
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        var progress=dialog!!.findViewById<ProgressBar>(R.id.myProgressBar)
+        if(!getString("progressBarColorRR").equals("")){
+            progress.indeterminateTintList=(ColorStateList.valueOf(Color.parseColor(getString("progressBarColorRR"))));
+        }
         dialog!!.setCancelable(false)
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.show()
@@ -80,6 +91,22 @@ fun Context.saveInt( key: String, value: Int) {
     prefsEditor.apply()
 }
 
+
+fun Context.saveLong( key: String, value: Long) {
+    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    val prefsEditor = sharedPref!!.edit()
+    prefsEditor.putLong(key, value)
+    prefsEditor.apply()
+}
+
+fun Context.saveFloat( key: String, value: Float) {
+    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    val prefsEditor = sharedPref!!.edit()
+    prefsEditor.putFloat(key, value)
+    prefsEditor.apply()
+}
+
+
 fun Context.saveBoolean( key: String, value: Boolean) {
     sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
     val prefsEditor = sharedPref!!.edit()
@@ -90,6 +117,14 @@ fun Context.saveBoolean( key: String, value: Boolean) {
 fun Context.getInt(key: String): Int {
     sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
     return sharedPref!!.getInt(key, 0)
+}
+fun Context.getFloat(key: String): Float {
+    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    return sharedPref!!.getFloat(key, 0.0f)
+}
+fun Context.getLong(key: String): Long {
+    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    return sharedPref!!.getLong(key, 0)
 }
 
 
@@ -123,3 +158,24 @@ fun Context.saveModel(key: String?, modelClass: Any?) {
     prefsEditor.putString(key, gson.toJson(modelClass))
     prefsEditor.apply()
 }
+
+
+fun Context.compressFile(file: File): File {
+    val imageCompress= ImageZipper(this)
+        .setQuality(80)
+        .setMaxWidth(200)
+        .setMaxHeight(200)
+        .compressToFile(file)
+    return imageCompress
+}
+
+
+fun ImageView.loadUrl(path:String){
+    Glide.with(this).load(path).into(this)
+}
+
+
+fun Context.setProgressBarColor(colorHashCode:String){
+saveString("progressBarColorRR",colorHashCode)
+}
+

@@ -6,15 +6,20 @@ import androidx.appcompat.app.AppCompatActivity
 import clearPreferenceData
 import com.rohit.myutils.Data
 import getBoolean
+import getFloat
 import getInt
+import getLong
 import getModel
 import getString
 import isNetworkConnected
 import isNotFastClicks
 import saveBoolean
+import saveFloat
 import saveInt
+import saveLong
 import saveModel
 import saveString
+import setProgressBarColor
 import showProgess
 import showToast
 import stopProgress
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun callLibraryFunctions() {
 
+        setProgressBarColor("#000000")
         /** to show toast **/
         showToast("hello everyone")
 
@@ -57,6 +63,8 @@ class MainActivity : AppCompatActivity() {
         /** Save Values in local storage **/
         saveString("myString", "rohit")
         saveInt("myInt", 1)
+        saveFloat("myFloat", 1.0f)
+        saveLong("myLong", 1)
         saveBoolean("myBoolean", true)
         saveModel("myModel", Data("rohit", 1))
 
@@ -65,7 +73,8 @@ class MainActivity : AppCompatActivity() {
         var saveIntValue = getInt("myInt")
         var saveBooleanValue = getBoolean("myBoolean")
         var saveModelValue = getModel("myModel", Data::class.java)
-
+        var saveLongValue = getLong("myLong")
+        var saveFloatValue = getFloat("myFloat")
 
     }
 
