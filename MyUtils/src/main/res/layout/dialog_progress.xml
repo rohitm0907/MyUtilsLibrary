@@ -10,4 +10,26 @@
         android:id="@+id/myProgressBar"
         android:background="@android:color/transparent"
      />
+
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/imgLogoProgress"
+
+        />
+
+    <TextView
+        android:id="@+id/txtPleaseWait"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgLogoProgress"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="@string/please_wait"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+
 </RelativeLayout>

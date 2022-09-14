@@ -5,22 +5,30 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.developers.imagezipper.ImageZipper
 import com.google.gson.Gson
+import com.rohit.myutils.MyConstants.Companion.LOGO_PROGRESS_ENABLE
+import com.rohit.myutils.MyConstants.Companion.MY_PREF_NAME
+import com.rohit.myutils.MyConstants.Companion.PROGRESS_COLOR
+import com.rohit.myutils.MyConstants.Companion.PROGRESS_LOGO
 import com.rohit.myutils.R
 import java.io.File
+import java.security.AccessController.getContext
 
 private var ON_CLICK_DELAY: Long = 700
 private var lastTimeClicked = 0L
 private var dialog: Dialog? = null
 private var sharedPref: SharedPreferences? = null
 
-fun Context.showToast(message:String){
-    Toast.makeText(this,message, Toast.LENGTH_SHORT).show()
+fun Context.showToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
 
@@ -46,9 +54,26 @@ fun Context.showProgess() {
         dialog!!.setContentView(R.layout.dialog_progress)
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.window!!.setBackgroundDrawableResource(android.R.color.transparent)
-        var progress=dialog!!.findViewById<ProgressBar>(R.id.myProgressBar)
-        if(!getString("progressBarColorRR").equals("")){
-            progress.indeterminateTintList=(ColorStateList.valueOf(Color.parseColor(getString("progressBarColorRR"))));
+        var progress = dialog!!.findViewById<ProgressBar>(R.id.myProgressBar)
+        var imgLogo = dialog!!.findViewById<ImageView>(R.id.imgLogoProgress)
+        var txtPleaseWait = dialog!!.findViewById<TextView>(R.id.txtPleaseWait)
+        if (getBoolean(LOGO_PROGRESS_ENABLE)) {
+            imgLogo.visibility = View.VISIBLE
+            progress.visibility = View.INVISIBLE
+            imgLogo.setBackgroundResource(getInt(PROGRESS_LOGO))
+            var animFlip = AnimationUtils.loadAnimation(
+                this,
+                R.anim.anim_flip
+            );
+            imgLogo.startAnimation(animFlip)
+        } else {
+            imgLogo.visibility = View.INVISIBLE
+            progress.visibility = View.VISIBLE
+            txtPleaseWait.visibility = View.INVISIBLE
+            if (!getString(PROGRESS_COLOR).equals("")) {
+                progress.indeterminateTintList =
+                    (ColorStateList.valueOf(Color.parseColor(getString(PROGRESS_COLOR))));
+            }
         }
         dialog!!.setCancelable(false)
         dialog!!.setCanceledOnTouchOutside(false)
@@ -78,67 +103,70 @@ fun Context.isNotFastClicks(): Boolean {
 }
 
 fun Context.saveString(key: String, value: String) {
-    sharedPref =getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     val prefsEditor = sharedPref!!.edit()
     prefsEditor.putString(key, value)
     prefsEditor.apply()
 }
 
-fun Context.saveInt( key: String, value: Int) {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+fun Context.saveInt(key: String, value: Int) {
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     val prefsEditor = sharedPref!!.edit()
     prefsEditor.putInt(key, value)
     prefsEditor.apply()
 }
 
 
-fun Context.saveLong( key: String, value: Long) {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+fun Context.saveLong(key: String, value: Long) {
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     val prefsEditor = sharedPref!!.edit()
     prefsEditor.putLong(key, value)
     prefsEditor.apply()
 }
 
-fun Context.saveFloat( key: String, value: Float) {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+fun Context.saveFloat(key: String, value: Float) {
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     val prefsEditor = sharedPref!!.edit()
     prefsEditor.putFloat(key, value)
     prefsEditor.apply()
 }
 
 
-fun Context.saveBoolean( key: String, value: Boolean) {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+fun Context.saveBoolean(key: String, value: Boolean) {
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     val prefsEditor = sharedPref!!.edit()
     prefsEditor.putBoolean(key, value)
     prefsEditor.apply()
 }
 
 fun Context.getInt(key: String): Int {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     return sharedPref!!.getInt(key, 0)
 }
+
 fun Context.getFloat(key: String): Float {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     return sharedPref!!.getFloat(key, 0.0f)
 }
+
 fun Context.getLong(key: String): Long {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     return sharedPref!!.getLong(key, 0)
 }
 
 
-fun Context.getString( key: String): String {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+fun Context.getString(key: String): String {
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     return sharedPref!!.getString(key, "")!!
 }
-fun Context.getBoolean( key: String): Boolean {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+
+fun Context.getBoolean(key: String): Boolean {
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     return sharedPref!!.getBoolean(key, false)!!
 }
 
 fun Context.clearPreferenceData() {
-    sharedPref =getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     val prefsEditor = sharedPref!!.edit()
     prefsEditor.clear()
     prefsEditor.apply()
@@ -146,13 +174,13 @@ fun Context.clearPreferenceData() {
 
 
 fun <T> Context.getModel(key: String?, type: Class<T>?): T {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     val gson = Gson()
     return gson.fromJson(sharedPref!!.getString(key, ""), type)
 }
 
 fun Context.saveModel(key: String?, modelClass: Any?) {
-    sharedPref = getSharedPreferences("myrrPref", Context.MODE_PRIVATE)
+    sharedPref = getSharedPreferences(MY_PREF_NAME, Context.MODE_PRIVATE)
     val prefsEditor = sharedPref!!.edit()
     val gson = Gson()
     prefsEditor.putString(key, gson.toJson(modelClass))
@@ -161,7 +189,7 @@ fun Context.saveModel(key: String?, modelClass: Any?) {
 
 
 fun Context.compressFile(file: File): File {
-    val imageCompress= ImageZipper(this)
+    val imageCompress = ImageZipper(this)
         .setQuality(80)
         .setMaxWidth(200)
         .setMaxHeight(200)
@@ -170,12 +198,17 @@ fun Context.compressFile(file: File): File {
 }
 
 
-fun ImageView.loadUrl(path:String){
+fun ImageView.loadUrl(path: String) {
     Glide.with(this).load(path).into(this)
 }
 
 
-fun Context.setProgressBarColor(colorHashCode:String){
-saveString("progressBarColorRR",colorHashCode)
+fun Context.setProgressBarColor(colorHashCode: String) {
+    saveString(PROGRESS_COLOR, colorHashCode)
+}
+
+fun Context.enableLogoProgress(isEnable: Boolean, logo: Int) {
+    saveBoolean(LOGO_PROGRESS_ENABLE, isEnable)
+    saveInt(PROGRESS_LOGO, logo)
 }
 

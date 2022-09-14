@@ -5,6 +5,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import clearPreferenceData
 import com.rohit.myutils.Data
+import enableLogoProgress
 import getBoolean
 import getFloat
 import getInt
@@ -34,6 +35,8 @@ class MainActivity : AppCompatActivity() {
     private fun callLibraryFunctions() {
 
         setProgressBarColor("#000000")
+        enableLogoProgress(true,R.mipmap.ic_launcher)
+
         /** to show toast **/
         showToast("hello everyone")
 
@@ -57,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         showProgess()
         Handler().postDelayed({
             stopProgress()
-        }, 3000)
+        }, 10000)
 
 
         /** Save Values in local storage **/
