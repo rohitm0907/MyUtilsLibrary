@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "MyUtilsLibrary"
 include ':app'
 include ':MyUtils'
+include ':permissions'

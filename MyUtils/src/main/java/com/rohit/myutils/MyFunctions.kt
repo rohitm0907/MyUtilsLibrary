@@ -1,10 +1,14 @@
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Base64
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -15,12 +19,14 @@ import com.bumptech.glide.Glide
 import com.developers.imagezipper.ImageZipper
 import com.google.gson.Gson
 import com.rohit.myutils.MyConstants.Companion.LOGO_PROGRESS_ENABLE
+import com.rohit.myutils.MyConstants.Companion.LOGS_TAG
 import com.rohit.myutils.MyConstants.Companion.MY_PREF_NAME
 import com.rohit.myutils.MyConstants.Companion.PROGRESS_COLOR
 import com.rohit.myutils.MyConstants.Companion.PROGRESS_LOGO
 import com.rohit.myutils.R
 import java.io.File
-import java.security.AccessController.getContext
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 private var ON_CLICK_DELAY: Long = 700
 private var lastTimeClicked = 0L
@@ -85,7 +91,7 @@ fun Context.showProgess() {
     }
 }
 
-fun Context.stopProgress() {
+fun stopProgress() {
     if (dialog != null) {
         dialog!!.cancel()
         dialog = null
@@ -93,7 +99,7 @@ fun Context.stopProgress() {
 }
 
 
-fun Context.isNotFastClicks(): Boolean {
+fun isNotFastClicks(): Boolean {
     if (System.currentTimeMillis() - lastTimeClicked > ON_CLICK_DELAY) {
         lastTimeClicked = System.currentTimeMillis()
         return true
@@ -198,8 +204,12 @@ fun Context.compressFile(file: File): File {
 }
 
 
-fun ImageView.loadUrl(path: String) {
-    Glide.with(this).load(path).into(this)
+fun ImageView.loadImage(path: Any, placeholders: Int = 0) {
+    var placeholder=placeholders
+    if(placeholder==0) {
+        placeholder = R.color.gray
+    }
+    Glide.with(this).load(path).placeholder(placeholder).into(this)
 }
 
 
@@ -211,4 +221,44 @@ fun Context.enableLogoProgress(isEnable: Boolean, logo: Int) {
     saveBoolean(LOGO_PROGRESS_ENABLE, isEnable)
     saveInt(PROGRESS_LOGO, logo)
 }
+
+fun Context.printHashKey() {
+    try {
+        val info: PackageInfo = packageManager.getPackageInfo(
+            packageName,
+            PackageManager.GET_SIGNATURES
+        )
+        for (signature in info.signatures) {
+            val md: MessageDigest = MessageDigest.getInstance("SHA")
+            md.update(signature.toByteArray())
+            val hashKey: String = String(Base64.encode(md.digest(), 0))
+            Log.i("LogsRRUtils", "Hash Key: $hashKey")
+        }
+    } catch (e: NoSuchAlgorithmException) {
+        Log.e("$LOGS_TAG", "Hash Key:", e)
+    } catch (e: Exception) {
+        Log.e("$LOGS_TAG", "Hash Key:", e)
+    }
+}
+
+
+fun printLogE(tag: String, message: String) {
+    Log.e("$LOGS_TAG $tag", message)
+}
+
+fun printLogD(tag: String, message: String) {
+    Log.d("$LOGS_TAG $tag", message)
+}
+
+fun printLogV(tag: String, message: String) {
+    Log.v("$LOGS_TAG $tag", message)
+}
+
+fun printLogI(tag: String, message: String) {
+    Log.i("$LOGS_TAG $tag", message)
+}
+
+
+
+
 
