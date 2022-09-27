@@ -67,7 +67,7 @@ For Activity:
         clearPreferenceData()
 	
 	
-	/** Print Logs **/
+	    /** Print Logs **/
         printLogD("mylog", "bro")
         printLogE("mylog", "bro")
         printLogV("mylog", "bro")
