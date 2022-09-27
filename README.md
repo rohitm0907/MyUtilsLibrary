@@ -67,6 +67,31 @@ For Activity:
         clearPreferenceData()
 	
 	
+	/** Print Logs **/
+        printLogD("mylog", "bro")
+        printLogE("mylog", "bro")
+        printLogV("mylog", "bro")
+        printLogI("mylog", "bro")
+
+
+        /** Load image in imageView **/
+        imgApp = findViewById(R.id.imgApp)
+        var imageUri =
+            "https:data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD.img"
+        imgApp.loadImage(imageUri)
+        imgApp.loadImage(imageUri,R.drawable.ic_launcher_background)
+        imgApp.loadImage(R.drawable.ic_launcher_background)
+	
+	
+        /**Progress functionality**/
+        progressBarFunctionality()
+
+
+        /** Print Hash key **/
+        printHashKey()
+
+	
+	
 For Fragments:
 
         Use requireActivity() with function name to call the functions.
@@ -74,4 +99,6 @@ For Fragments:
 	    For e.g:  
 	    requireActivity.showToast("hello everyone")
 	    requireActivity.showProgress()
+	    
+	  
 	
